@@ -85,7 +85,7 @@ class ZdSnapshotViewHandler(CommonBaseHandler):
         '''zookeeper上znode快照的查看
         '''
         status_mapping = {
-            "0": "备份中",
+            "0": "已备份",
             "1": "最近使用"
         }
         snapshots = ZdSnapshot.select().where(

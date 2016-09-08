@@ -122,7 +122,7 @@ def last_snapshot(cluster_name, path):
     for snapshot in snapshots:
         if last_shot is None:
             last_shot = snapshot
-        # status为1代表正在使用，0代表备份中
+        # status为1代表正在使用，0代表已备份
         if snapshot.status == "1":
             break
         last_shot = snapshot
@@ -227,7 +227,7 @@ def make_snapshots_from_path(cluster_name, path):
 def rollback_snapshot(cluster_name, snapshot):
     """快照回滚
     """
-    # 更新所有正在使用的快照为备份中, 0代表备份中，1代表使用中
+    # 更新所有正在使用的快照为备份中, 0代表已备份，1代表使用中
     query = ZdSnapshot.update(status="0").where(
         (ZdSnapshot.cluster_name == cluster_name) &
         (ZdSnapshot.path == snapshot.path) &
