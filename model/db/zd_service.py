@@ -26,11 +26,11 @@ class ZdService(ZKDASH_DB.Model):
     id = IntegerField(primary_key=True, constraints=[SQL("AUTO_INCREMENT")])
     service_name = CharField(max_length=64, null=True)
     zookeeper_id = IntegerField()
-    "path = CharField(max_length=512, null=True)
-    "data = TextField(null=True)
-    "create_time = DateTimeField(null=True)
-    "commit = CharField(max_length=64, null=True)
-    "status = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])
+    #path = CharField(max_length=512, null=True)
+    #data = TextField(null=True)
+    #create_time = DateTimeField(null=True)
+    #commit = CharField(max_length=64, null=True)
+    #status = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])
     deleted = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])
 
     class Meta(object):
