@@ -233,7 +233,9 @@ class ZdZnodeSyncstatusHandler(CommonBaseHandler):
         '''
         # md5 value in zookeeper
         znode_value = ZookeeperService.get(self.cluster_name, self.path)
+	print 'znode_value is:', znode_value
         znode_md5_value = hashlib.md5(znode_value).hexdigest()
+	print 'znode_md5_value is:', znode_md5_value
 
         # agent value, idc转换为zookeeper集群名称，方便统一管理
         qconf_feedbacks = ZdQconfFeedback.select().where(
@@ -329,6 +331,7 @@ class ZdZnodeSaveHandler(CommonBaseHandler):
                                data=zk_data,
                                znode_type=self.znode_type,
                                business=self.business)
+	print 'mmmmmmmmmmffffffffffffff'
 
         return self.ajax_ok(close_current=True)
 

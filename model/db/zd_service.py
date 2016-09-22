@@ -7,16 +7,17 @@ All rights reserved.
 
 摘    要: zd_service.py
 创 建 者: baipeng
-创建日期: 2015-09-12
+创建日期: 2016-09-12
 """
 from peewee import DateTimeField
 from peewee import CharField
 from peewee import TextField
 from peewee import IntegerField
+from peewee import ForeignKeyField
 from peewee import SQL
 
 from model.db.base import ZKDASH_DB, EnumField
-
+from model.db.zd_zookeeper import ZdZookeeper
 
 class ZdService(ZKDASH_DB.Model):
 
@@ -25,7 +26,9 @@ class ZdService(ZKDASH_DB.Model):
 
     id = IntegerField(primary_key=True, constraints=[SQL("AUTO_INCREMENT")])
     service_name = CharField(max_length=64, null=True)
-    zookeeper_id = IntegerField()
+    #zookeeper_id = IntegerField()
+    #related_name反向引用名称,可以用zookeeper.services访问关联的所有服务
+    zookeeper = ForeignKeyField(ZdZookeeper, related_name='services')
     #path = CharField(max_length=512, null=True)
     #data = TextField(null=True)
     #create_time = DateTimeField(null=True)
