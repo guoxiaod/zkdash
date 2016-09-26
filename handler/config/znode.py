@@ -331,7 +331,6 @@ class ZdZnodeSaveHandler(CommonBaseHandler):
                                data=zk_data,
                                znode_type=self.znode_type,
                                business=self.business)
-	print 'mmmmmmmmmmffffffffffffff'
 
         return self.ajax_ok(close_current=True)
 

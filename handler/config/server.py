@@ -25,7 +25,7 @@ from model.db.zd_znode import ZdZnode
 from model.db.zd_zookeeper import ZdZookeeper
 from model.db.zd_service import ZdService
 from model.db.zd_qconf_feedback import ZdQconfFeedback
-from service import zookeeper as ZookeeperService
+#from service import zookeeper as ZookeeperService
 from service import znode as ZnodeService
 from conf.settings import USE_QCONF
 
@@ -58,7 +58,7 @@ class ZdServiceIndexHandler(CommonBaseHandler):
         order = getattr(ZdService, self.order_field)
         records = ZdService.select().order_by(
             getattr(order, self.order_direction)()
-        ).where(reduce(operator.and_, clauses))
+        ).where(reduce(operator.and_, clauses) and ZdService.deleted == "0")
         self.render('config/service/index.html',
                     action='/config/service/index',
                     total=records.count(),
@@ -85,6 +85,7 @@ class ZdServiceSaveHandler(CommonBaseHandler):
     """save
     """
     args_list = [
+        #add时不传入id delete时传入delete 不提供edit操作
         ArgsMap('id', default=''),
         ArgsMap('cluster_name', default=''),
         ArgsMap('service_name', default=''),
@@ -100,10 +101,10 @@ class ZdServiceSaveHandler(CommonBaseHandler):
         else:
             zookeeper = ZdZookeeper.one(cluster_name=self.cluster_name, deleted='0')
             if zookeeper is None:
-                return self.ajax_popup(code=300, msg="zookeeper名称错误！")
+                return self.ajax_popup(code=300, msg="zookeeper集群不存在！")
             else:
                 # 新增记录
-                service = ZdService.one(zookeeper_id=zookeeper.id, service_name=self.service_name, deleted='0')
+                service = ZdService.one(zookeeper=zookeeper.id, service_name=self.service_name, deleted='0')
                 # 检验集群下是否已经有该服务
                 if service:
                     return self.ajax_popup(code=300, msg="service名称重复！")
@@ -111,9 +112,41 @@ class ZdServiceSaveHandler(CommonBaseHandler):
                     tb_inst = ZdService()
         if self.id:
             tb_inst.id = self.id
-        if self.cluster_name:
-            tb_inst.cluster_name = self.cluster_name
         if self.service_name:
             tb_inst.service_name = self.service_name
+	tb_inst.zookeeper = zookeeper
         tb_inst.save()
+        # 更新在zookeeper和mysql上存储的配置信息, 同时进行快照备份
+        ZnodeService.set_znode(cluster_name=self.cluster_name,
+                               path='/' + self.service_name,
+                               data='',
+                               znode_type='0',
+                               business='')
         return self.ajax_ok(forward="/config/service/index")
+
+#@route(r'/config/service/search')
+#class ZdServiceSearchHandler(CommonBaseHandler):
+#
+#    '''search,搜索
+#    '''
+#    args_list = [
+#        ArgsMap('pageSize', 'page_size', default=30),
+#        ArgsMap('pageCurrent', 'current_page', default=1),
+#        ArgsMap('orderDirection', 'order_direction', default="asc"),
+#        ArgsMap('orderField', 'order_field', default="id"),
+#    ]
+#
+#    @authenticated
+#    def response(self):
+#        '''search
+#        '''
+#        clauses = self.parse_query(ZdService)
+#        order = getattr(ZdService, self.order_field)
+#        records = ZdService.select().order_by(
+#            getattr(order, self.order_direction)()
+#        ).where(reduce(operator.and_, clauses))
+#        self.render('config/service/index.html',
+#                    total=records.count(),
+#                    current_page=self.current_page,
+#                    page_size=self.page_size,
+#                    records=records.paginate(self.current_page, self.page_size))

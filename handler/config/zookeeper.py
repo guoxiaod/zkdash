@@ -20,6 +20,7 @@ from handler.bases import ArgsMap
 from lib import route
 from lib.excel import ExcelWorkBook
 from model.db.zd_zookeeper import ZdZookeeper
+from model.db.zd_service import ZdService
 from service import zookeeper as ZookeeperService
 from conf import log
 
@@ -190,6 +191,30 @@ class ZdZookeeperEditHandler(CommonBaseHandler):
             return self.ajax_popup(close_current=False, code=300, msg="请选择某条记录进行修改")
 
 
+#@route(r'/config/zookeeper/delete', '删除')
+#class ZdZookeeperDeleteHandler(CommonBaseHandler):
+#
+#    """delete, 删除
+#    """
+#    args_list = [
+#        ArgsMap('info_ids', default=''),
+#    ]
+#
+#    def response(self):
+#        '''delete
+#        '''
+#        if not self.info_ids:
+#            return self.ajax_popup(close_current=False, code=300, msg="请选择某条记录进行删除")
+#
+#        id_list = self.info_ids.split(',')
+#        try:
+#            del_query = ZdZookeeper.delete().where(ZdZookeeper.id << id_list)
+#            del_query.execute()
+#        except OperationalError as exc:
+#            log.error("error occurred while delete zookeepers, ids: %s\n%s", id_list, str(exc))
+#            return self.ajax_popup(close_current=False, code=300, msg="删除失败！")
+#        return self.ajax_ok(close_current=False)
+
 @route(r'/config/zookeeper/delete', '删除')
 class ZdZookeeperDeleteHandler(CommonBaseHandler):
 
@@ -206,12 +231,14 @@ class ZdZookeeperDeleteHandler(CommonBaseHandler):
             return self.ajax_popup(close_current=False, code=300, msg="请选择某条记录进行删除")
 
         id_list = self.info_ids.split(',')
-        try:
-            del_query = ZdZookeeper.delete().where(ZdZookeeper.id << id_list)
-            del_query.execute()
-        except OperationalError as exc:
-            log.error("error occurred while delete zookeepers, ids: %s\n%s", id_list, str(exc))
-            return self.ajax_popup(close_current=False, code=300, msg="删除失败！")
+        for zookeeper_id in id_list:
+            zookeeper = ZdZookeeper.one(id=zookeeper_id)
+            zookeeper.deleted = '1'
+            zookeeper.save()
+            services = ZdService.select().where(ZdService.zookeeper == zookeeper.id and ZdService.deleted == '0')
+            for service in services:
+                service.deleted = '1'
+                service.save()
         return self.ajax_ok(close_current=False)
 
 
