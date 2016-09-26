@@ -4,10 +4,15 @@
     <div class="panel-body">
       <div class="bjui-searchBar" id="config_searcher">
           <label>集群名称:</label>
-          <select name="cluster_name" data-toggle="selectpicker">
+          <!--<select name="cluster_name" data-toggle="selectpicker" id="cluster">-->
+          <select name="cluster_name" id="cluster">
+          <option value=""></option>
           {% for cluster in clusters %}
           <option value="{{ cluster.cluster_name }}">{{ cluster.cluster_name }}</option>
           {% end %}
+          </select>
+          <label>服务名称:</label>
+          <select name="service_name" id="service">
           </select>
           &nbsp;
           <label>节点路径:</label>
@@ -20,9 +25,15 @@
 </div>
 <script>
 $("#search_config_btn").on("click", function(event){
+    var service = $("#config_searcher select[name='service_name']").val();
+    if (service == null) return;
+    console.log("aaaaaa");
+    console.log(service);
+    console.log("aaaaaa");
     var cluster, path;
     cluster = $("#config_searcher select[name='cluster_name']").val();
-    path = $("#config_searcher input[name='path']").val() || "/";
+    path = "/" + service;
+    //path = $("#config_searcher input[name='path']").val() || "/";
     $(this).navtab({
         url: "config/znode/displaytree",
         id: "display_ztree",
@@ -32,4 +43,36 @@ $("#search_config_btn").on("click", function(event){
         data: {cluster_name: cluster, path: path, _xsrf:$.cookie("_xsrf")},
     });
 });
+
+$("#cluster").on("change", function(event){
+    var cluster = $("#config_searcher select[name='cluster_name']").val();
+    var post_data = new Object();
+    post_data['_xsrf'] = $.cookie('_xsrf');
+    post_data['cluster'] = cluster;
+    $.ajax({          
+             url:"/config/zookeeper/query_services?"+Math.random(),  
+             data:post_data,
+             type : "post",    
+             cache : false,    
+             dataType : "json",   
+             error:function(){  
+                alert("error occured!!!");  
+             },  
+             success:function(datas){  
+             var service_id = document.getElementById('service');
+	     service_id.innerHTML = "";
+             if(datas != null){  
+		console.log(datas);
+                var return_data = eval('(' + datas + ')');
+                var services = return_data["service_names"];
+                for(var i=0;i<services.length;i++){  
+                     console.log(services[i]);
+                     var option = new Option(services[i], services[i]);
+		     service_id.add(option);
+                }  
+              }else{  
+              }  
+           }  
+   });  
+});  
 </script>

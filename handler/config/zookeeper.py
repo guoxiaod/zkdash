@@ -13,6 +13,7 @@ import urllib
 import operator
 import json
 from tornado.web import authenticated
+import tornado.escape
 from peewee import OperationalError
 
 from handler.bases import CommonBaseHandler
@@ -189,6 +190,52 @@ class ZdZookeeperEditHandler(CommonBaseHandler):
                                record=record)
         else:
             return self.ajax_popup(close_current=False, code=300, msg="请选择某条记录进行修改")
+
+@route(r'/config/zookeeper/query_services', '查询集群下面该用户有权限的所有子系统')
+class ZdZookeeperQueryServicesHandler(CommonBaseHandler):
+
+    """query_services, 查询集群下该用户有权限的所有子系统 
+    """
+    args_list = [
+        ArgsMap('cluster', default=''),
+    ]
+
+    def response(self):
+        zookeeper = ZdZookeeper.one(cluster_name=self.cluster, deleted='0')
+        #self.set_header('Content-Type', 'application/json; charset=UTF-8')
+        #self.write(json.dumps({'message': 'ok'}))
+        #self.finish()
+        if zookeeper is not None:
+            services = ZdService.select().where((ZdService.zookeeper == zookeeper.id) & (ZdService.deleted == '0'))
+            if services.count() >= 1:
+                json_data = '{"service_names":['
+                for service in services:
+                    json_data += '"'
+                    json_data += service.service_name
+                    json_data += '",'
+                json_data = json_data[0:len(json_data)-1]
+                json_data += "]}"
+                return json_data
+	    else:
+		json_data = ''
+                self.finish()
+	else:
+            self.finish()
+            #self.set_header('Content-Type', 'application/json; charset=UTF-8')
+            #self.write(json.dumps(json_data))
+            #self.finish()
+        #'''edit
+        #'''
+        #if self.info_ids:
+        #    id_li = self.info_ids.split(',')
+        #    if len(id_li) != 1:
+        #        return self.ajax_popup(close_current=False, code=300, msg="请选择单条记录进行修改")
+        #    record = ZdZookeeper.one(id=id_li[0])
+        #    return self.render('config/zookeeper/edit.html',
+        #                       action='/config/zookeeper/save',
+        #                       record=record)
+        #else:
+        #    return self.ajax_popup(close_current=False, code=300, msg="请选择某条记录进行修改")
 
 
 #@route(r'/config/zookeeper/delete', '删除')

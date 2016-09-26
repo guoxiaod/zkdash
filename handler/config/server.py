@@ -58,7 +58,7 @@ class ZdServiceIndexHandler(CommonBaseHandler):
         order = getattr(ZdService, self.order_field)
         records = ZdService.select().order_by(
             getattr(order, self.order_direction)()
-        ).where(reduce(operator.and_, clauses) and ZdService.deleted == "0")
+		).where(reduce(operator.and_, clauses) & (ZdService.deleted == "0"))
         self.render('config/service/index.html',
                     action='/config/service/index',
                     total=records.count(),
