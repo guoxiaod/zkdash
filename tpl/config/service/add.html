@@ -1,0 +1,32 @@
+<div class="bjui-pageContent">
+ <form id="addZookeeperCluster" class="form-horizontal" role="form" action="{{ action }}" id="j_custom_form" data-toggle="validate" data-reload-navtab="true" data-alertmsg="false">
+  {% raw xsrf_form_html() %}
+  <div class="pageFormContent" data-layout-h="0"><p></p>
+   <div class="form-group">
+    <label class="col-md-4 control-label">集群名称:</label>
+    <div class="col-md-8">
+     <input class="form-control" type="text" name="cluster_name" value="" size="25">
+    </div>
+   </div>
+   <div class="form-group">
+    <label class="col-md-4 control-label">服务名称:</label>
+    <div class="col-md-8">
+     <input class="form-control" type="text" name="service_name" value="" size="25">
+    </div>
+   </div>
+  </div>
+ </form>
+</div>
+<div align="right" class="bjui-pageFooter">
+   <button type="submit" class="btn-default" data-icon="save">保存</button>
+   <button type="button" class="btn-close" data-icon="close">取消</button>
+</div>
+<script>
+  $('#addZookeeperCluster').validator({
+      rules: {},
+      fields: {
+        "cluster_name": "required",
+        "service_name": "required",
+      }
+  });
+</script>
