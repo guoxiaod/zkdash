@@ -1,9 +1,9 @@
 <div class="bjui-pageHeader">
  <form class="pagerForm" id="service-pagerForm" data-toggle="ajaxform" action="{{ action }}" method="post">
   <div class="bjui-searchBar">
-   {% raw xsrf_form_html() %}
-   <input type="hidden" name="pageSize" value="{{ page_size }}">
-   <input type="hidden" name="pageCurrent" value="{{ current_page }}">
+    {% raw xsrf_form_html() %}
+    <input type="hidden" name="pageSize" value="{{ page_size }}">
+    <input type="hidden" name="pageCurrent" value="{{ current_page }}">
   </div>
   <div class="bjui-moreSearch">
   </div>
@@ -20,6 +20,7 @@
       <!--<button type="button" class="btn-blue" data-url="/config/service/show?" data-id="_config_service_history" data-toggle="navtab" data-icon="edit">状态查看</button>-->
     </div>
       <!--删除，导出，发布三种有批量操作-->
+    <!--
     <div class="pull-right">
       <div class="btn-group" role="group">
         <button type="button" class="btn-default dropdown-toggle" data-toggle="dropdown" data-icon="copy">复选框-批量操作<span class="caret"></span></button>
@@ -29,6 +30,7 @@
         </ul>
       </div>
     </div>
+    -->
   </ul>
 
  </div>
@@ -37,7 +39,7 @@
    <tr>
      <th data-order-field="cluster_name" align="left">集群名称</th>
      <th data-order-field="service_name" align="left">服务名称</th>
-     <th width="26"><input type="checkbox" class="checkboxCtrl" data-group="ids" data-toggle="icheck"></th>
+     <!--<th width="26"><input type="checkbox" class="checkboxCtrl" data-group="ids" data-toggle="icheck"></th>-->
    </tr>
   </thead>
   <tbody>
@@ -45,7 +47,7 @@
     <tr data-id="{{ record.id }}">
       <td>{% if record.zookeeper.cluster_name %} {{ record.zookeeper.cluster_name }} {% end %} </td>
       <td>{% if record.service_name %} {{ record.service_name }} {% end %} </td>
-      <td><input type="checkbox" name="ids" data-toggle="icheck" value="{{ record.id }}"></td>
+      <!--<td><input type="checkbox" name="ids" data-toggle="icheck" value="{{ record.id }}"></td>-->
     </tr>
     {% end %}
   </tbody>
