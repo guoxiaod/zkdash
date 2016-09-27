@@ -182,6 +182,9 @@ def _get_recursively(zoo_client, path, nodes):
 def make_snapshot(cluster_name, path, data=None):
     """生成快照，包括快照树结构信息(zd_snapshot_tree)和快照数据(zd_snapshot)
     """
+    print cluster_name
+    print path
+    print data
     if data is None:
         data = ZookeeperService.get(cluster_name, path)
 

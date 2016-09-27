@@ -25,13 +25,12 @@ class ZdQconfFeedback(ZKDASH_DB.Model):
     """
 
     id = IntegerField(primary_key=True, constraints=[SQL("AUTO_INCREMENT")])
+    cluster = CharField(max_length=128, null=True)
     hostname = CharField(max_length=32, null=True)
     ip = CharField(max_length=32, null=True)
     path = CharField(max_length=512, null=True)
-    md5_value = CharField(max_length=128, null=True)
-    idc = CharField(max_length=32, null=True)
+    value = CharField(max_length=128, null=True)
     update_time = DateTimeField(null=True)
-    data_type = CharField(null=True)
     execute_status = EnumField(enum_value="'0', '1', '2'", constraints=[SQL("DEFAULT '0'")])
     deleted = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])
 

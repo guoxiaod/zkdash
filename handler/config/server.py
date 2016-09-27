@@ -117,9 +117,15 @@ class ZdServiceSaveHandler(CommonBaseHandler):
 	tb_inst.zookeeper = zookeeper
         tb_inst.save()
         # 更新在zookeeper和mysql上存储的配置信息, 同时进行快照备份
+        # 当一个节点的父节点存在时才会保存快照
+        ZnodeService.set_znode(cluster_name=self.cluster_name,
+                               path='/',
+                               data='/',
+                               znode_type='0',
+                               business='')
         ZnodeService.set_znode(cluster_name=self.cluster_name,
                                path='/' + self.service_name,
-                               data='',
+                               data=self.service_name,
                                znode_type='0',
                                business='')
         return self.ajax_ok(forward="/config/service/index")

@@ -3,29 +3,35 @@
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="list-group" id="zk_cluster_nodes">
-        <a href="#" class="list-group-item">ZOOKEEPER集群: {{ idc }}</a>
+        <a href="#" class="list-group-item">ZOOKEEPER集群: {{ cluster }}</a>
         <a href="#" class="list-group-item">节点路径: {{ path }}</a>
       </div>
   </div>
-
+   <label>主机个数:</label> &nbsp; {{ count }}
+   <label>相等个数:</label> &nbsp; {{ equal_counts }}
+   <label>不等个数:</label> &nbsp; {{ not_equal_counts }}
+   <br>
+   <br>
     <table class="table table-bordered table-hover table-top" data-toggle="tablefixed">
         <thead>
           <tr>
             <th>主机名</th>
             <th>IP</th>
-            <th>配置同步状态</th>
+            <th>zookeeper值</th>
+            <th>主机值</th>
+            <th>是否相等</th>
             <th>配置同步时间</th>
           </tr>
         </thead>
         {% for feedback in feedbacks %}
-          {% if hasattr(feedback, 'sync_status') %}
           <tr>
             <td>{{ feedback.hostname }}</td>
             <td>{{ feedback.ip }}</td>
+            <td>{{ feedback.znode_value }}</td>
+            <td>{{ feedback.value }}</td>
             <td>{{ feedback.sync_status }}</td>
             <td>{{ feedback.update_time }}</td>
           </tr>
-          {% end %}
         {% end %}
     </table>
 </div>

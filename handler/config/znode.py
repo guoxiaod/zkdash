@@ -233,29 +233,33 @@ class ZdZnodeSyncstatusHandler(CommonBaseHandler):
         '''
         # md5 value in zookeeper
         znode_value = ZookeeperService.get(self.cluster_name, self.path)
-	print 'znode_value is:', znode_value
-        znode_md5_value = hashlib.md5(znode_value).hexdigest()
-	print 'znode_md5_value is:', znode_md5_value
+        #znode_md5_value = hashlib.md5(znode_value).hexdigest()
 
         # agent value, idc转换为zookeeper集群名称，方便统一管理
         qconf_feedbacks = ZdQconfFeedback.select().where(
-            (ZdQconfFeedback.idc == self.cluster_name) & (ZdQconfFeedback.path == self.path) &
+            (ZdQconfFeedback.cluster == self.cluster_name) & (ZdQconfFeedback.path == self.path) &
             (ZdQconfFeedback.deleted == '0')
         )
 
+	count = qconf_feedbacks.count() 
+        equal_counts = 0
+	not_equal_counts = 0
         # check sync_status
         for feedback in qconf_feedbacks:
-            # 只检查agent反馈记录中get_conf命令获取的值, 2代表get_conf命令的反馈记录
-            if feedback.data_type != '2':
-                continue
-            if znode_md5_value == feedback.md5_value:
-                feedback.sync_status = "已同步"
+            feedback.znode_value = znode_value
+            if znode_value == feedback.value:
+                feedback.sync_status = "相等"
+                equal_counts = equal_counts + 1
             else:
-                feedback.sync_status = "未同步"
-
+                feedback.sync_status = "不等"
+                not_equal_counts = not_equal_counts + 1
+	
         return self.render('config/znode/syncstatus.html',
                            path=self.path,
-                           idc=self.cluster_name,
+		           count = count,
+			   equal_counts = equal_counts,
+			   not_equal_counts = not_equal_counts,
+                           cluster=self.cluster_name,
                            feedbacks=qconf_feedbacks)
 
 

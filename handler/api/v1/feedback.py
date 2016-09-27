@@ -15,6 +15,7 @@ from handler.bases import ApiBaseHandler
 from handler.bases import ArgsMap
 from lib import route
 from model.db.zd_qconf_feedback import ZdQconfFeedback
+import json
 
 
 @route(r'/api/v1/feedback')
@@ -23,45 +24,42 @@ class ZdQconfFeedbackSaveHandler(ApiBaseHandler):
     """
     args_list = [
         ArgsMap('id', default=''),
+        ArgsMap('cluster', default=''),
         ArgsMap('hostname', default=''),
         ArgsMap('ip', default=''),
-        ArgsMap('node_whole', default=''),
-        ArgsMap('value_md5', default=''),
-        ArgsMap('idc', default=''),
-        ArgsMap('update_time', default=''),
-        ArgsMap('data_type', default=''),
-        ArgsMap('deleted', default=''),
+        #ArgsMap('path', default=''),
+        #ArgsMap('value', default=''),
+        #ArgsMap('update_time', default=''),
+        #ArgsMap('deleted', default=''),
+        ArgsMap('time', default=''),
+        ArgsMap('values', default=''),
     ]
 
     def response(self):
         '''add
         '''
-	print 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
-        feedback = ZdQconfFeedback.one(idc=self.idc, ip=self.ip, path=self.node_whole)
-        if feedback is None:
-            # create new feedback record
-            feedback = ZdQconfFeedback()
-        # 填充字段
-        if self.idc:
-            feedback.idc = self.idc
-        if self.ip:
-            feedback.ip = self.ip
-        if self.hostname:
-            feedback.hostname = self.hostname
-        if self.node_whole:
-            feedback.path = self.node_whole
-        if self.value_md5:
-            feedback.md5_value = self.value_md5
-        if self.update_time:
-            # convert unix timestamp to datetime
-            update_time = datetime.fromtimestamp(
-                int(self.update_time)).strftime('%Y-%m-%d %H:%M:%S')
-            feedback.update_time = update_time
-        if self.data_type:
-            feedback.data_type = self.data_type
-        # 自定义字段
-        if self.deleted:
-            feedback.deleted = self.deleted
-        feedback.save()
+	path2values = json.loads(self.values)
+	for path, value in path2values.items():
+            feedback = ZdQconfFeedback.one(cluster=self.cluster, ip=self.ip, path=path)
+            if feedback is None:
+                # create new feedback record
+                feedback = ZdQconfFeedback()
+            # 填充字段
+            if self.cluster:
+                feedback.cluster = self.cluster
+            if self.hostname:
+                feedback.hostname = self.hostname
+            if self.ip:
+                feedback.ip = self.ip
+            if path:
+                feedback.path = path
+            if self.time:
+                # convert unix timestamp to datetime
+                update_time = datetime.fromtimestamp(
+                    int(self.time)).strftime('%Y-%m-%d %H:%M:%S')
+                feedback.update_time = update_time
+            if value:
+                feedback.value = value
+            feedback.save()
         # qconf protocol, return '0' means ok
         self.finish('0')
