@@ -170,7 +170,8 @@ $('#batch_edit_znodes').on('click', function(){
   //var path = $('#zk_node_path').val();
   var path = '';
   var cluster_name = $("#zk_node_cluster").val();
-  var req_url = 'config/znode/batchedit?path=' + path + '&cluster_name=' + cluster_name;
+  var service_name = $("#zk_node_service").val();
+  var req_url = 'config/znode/batchedit?path=' + path + '&cluster_name=' + cluster_name + '&service_name=' + service_name;
   $(this).dialog({url:req_url, title:'更新节点', width:800, height:450});
   //if (path && path.trim().length > 0) {
   //  var req_url = 'config/znode/batchedit?path=' + path + '&cluster_name=' + cluster_name;

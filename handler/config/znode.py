@@ -204,6 +204,7 @@ class ZdZnodeEditTreeHandler(CommonBaseHandler):
         #ArgsMap('path', required=True),
         ArgsMap('path', required=False),
         ArgsMap('cluster_name', required=True),
+        ArgsMap('service_name', required=True),
     ]
 
     @authenticated
@@ -219,7 +220,8 @@ class ZdZnodeEditTreeHandler(CommonBaseHandler):
         #                   child_znodes=child_znodes)
         return self.render('config/znode/batchedit.html',
                            action='/config/znode/batchsave',
-                           cluster_name=self.cluster_name)
+                           cluster_name=self.cluster_name,
+                           service_name=self.service_name)
 
 
 @route(r'/config/znode/syncstatus')
@@ -350,6 +352,7 @@ class ZdZnodeBatchSaveHandler(CommonBaseHandler):
     """
     args_list = [
         ArgsMap('cluster_name', required=True),
+        ArgsMap('service_name', required=True),
         #ArgsMap('parent_path', required='/'),
         #ArgsMap('description', default=''),
         #ArgsMap('deleted', default=''),
@@ -362,6 +365,10 @@ class ZdZnodeBatchSaveHandler(CommonBaseHandler):
         keys = self.get_arguments("key")
         values = self.get_arguments("value")
         descriptions = self.get_arguments("description")
+
+        for key in keys:
+            if not key.startswith("/" + self.service_name + "/"):
+                return self.ajax_popup(code=300, msg="键值格式错误，请输入完整路径！")
 
         #batch_data = []
         #for node_name, node_value in zip(keys, values):
@@ -382,7 +389,7 @@ class ZdZnodeBatchSaveHandler(CommonBaseHandler):
         #                              batch_data=batch_data,
         #                              description=self.description)
         for node_name, node_value, node_description in zip(keys, values, descriptions):
-            ZnodeService.set_znode(self.cluster_name, node_name, node_value, node_description)
+            ZnodeService.set_znode(self.cluster_name, node_name, node_value, description=node_description)
 
         return self.ajax_ok(close_current=True)
 
