@@ -14,12 +14,12 @@ from datetime import datetime
 from handler.bases import ApiBaseHandler
 from handler.bases import ArgsMap
 from lib import route
-from model.db.zd_qconf_feedback import ZdQconfFeedback
+from model.db.zd_feedback import ZdFeedback
 import json
 
 
 @route(r'/api/v1/feedback')
-class ZdQconfFeedbackSaveHandler(ApiBaseHandler):
+class ZdFeedbackSaveHandler(ApiBaseHandler):
     """save
     """
     args_list = [
@@ -40,10 +40,10 @@ class ZdQconfFeedbackSaveHandler(ApiBaseHandler):
         '''
 	path2values = json.loads(self.values)
 	for path, value in path2values.items():
-            feedback = ZdQconfFeedback.one(cluster=self.cluster, ip=self.ip, path=path)
+            feedback = ZdFeedback.one(cluster=self.cluster, ip=self.ip, path=path)
             if feedback is None:
                 # create new feedback record
-                feedback = ZdQconfFeedback()
+                feedback = ZdFeedback()
             # 填充字段
             if self.cluster:
                 feedback.cluster = self.cluster

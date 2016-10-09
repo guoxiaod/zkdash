@@ -6,7 +6,7 @@
 Copyright (c) 2014,掌阅科技
 All rights reserved.
 
-摘    要: zd_qconf_feedback.py
+摘    要: zd_feedback.py
 创 建 者: zhuangshixiong
 创建日期: 2015-06-24
 """
@@ -19,9 +19,9 @@ from peewee import SQL
 from model.db.base import ZKDASH_DB, EnumField
 
 
-class ZdQconfFeedback(ZKDASH_DB.Model):
+class ZdFeedback(ZKDASH_DB.Model):
 
-    """ZdQconfFeedback Model
+    """ZdFeedback Model
     """
 
     id = IntegerField(primary_key=True, constraints=[SQL("AUTO_INCREMENT")])
@@ -38,4 +38,4 @@ class ZdQconfFeedback(ZKDASH_DB.Model):
 
         """表配置信息
         """
-        db_table = "zd_qconf_feedback"
+        db_table = "zd_feedback"

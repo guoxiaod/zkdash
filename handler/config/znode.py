@@ -22,10 +22,9 @@ from lib import route
 from lib.utils import normalize_path
 from model.db.zd_znode import ZdZnode
 from model.db.zd_zookeeper import ZdZookeeper
-from model.db.zd_qconf_feedback import ZdQconfFeedback
+from model.db.zd_feedback import ZdFeedback
 from service import zookeeper as ZookeeperService
 from service import znode as ZnodeService
-from conf.settings import USE_QCONF
 
 
 ############################################################
@@ -68,14 +67,10 @@ class ZdZnodeShowHandler(CommonBaseHandler):
         nodes = []
         normalized_path = normalize_path(self.path)
 
-        if USE_QCONF:
-            ZnodeService.get_znode_tree_from_qconf(
-                self.cluster_name, normalized_path, nodes)
-        else:
-            zoo_client = ZookeeperService.get_zoo_client(self.cluster_name)
-            if not zoo_client:
-                return self.ajax_popup(code=300, msg="连接zookeeper出错！")
-            ZnodeService.get_znode_tree(zoo_client, normalized_path, nodes)
+        zoo_client = ZookeeperService.get_zoo_client(self.cluster_name)
+        if not zoo_client:
+            return self.ajax_popup(code=300, msg="连接zookeeper出错！")
+        ZnodeService.get_znode_tree(zoo_client, normalized_path, nodes)
 
         #if normalized_path != "/" and len(nodes) <= 1:
         #    return self.ajax_popup(
@@ -243,16 +238,16 @@ class ZdZnodeSyncstatusHandler(CommonBaseHandler):
         #znode_md5_value = hashlib.md5(znode_value).hexdigest()
 
         # agent value, idc转换为zookeeper集群名称，方便统一管理
-        qconf_feedbacks = ZdQconfFeedback.select().where(
-            (ZdQconfFeedback.cluster == self.cluster_name) & (ZdQconfFeedback.path == self.path) &
-            (ZdQconfFeedback.deleted == '0')
+        feedbacks = ZdFeedback.select().where(
+            (ZdFeedback.cluster == self.cluster_name) & (ZdFeedback.path == self.path) &
+            (ZdFeedback.deleted == '0')
         )
 
-	count = qconf_feedbacks.count() 
+	count = feedbacks.count() 
         equal_counts = 0
 	not_equal_counts = 0
         # check sync_status
-        for feedback in qconf_feedbacks:
+        for feedback in feedbacks:
             feedback.znode_value = znode_value
             if znode_value == feedback.value:
                 feedback.sync_status = "相等"
@@ -267,7 +262,7 @@ class ZdZnodeSyncstatusHandler(CommonBaseHandler):
 			   equal_counts = equal_counts,
 			   not_equal_counts = not_equal_counts,
                            cluster=self.cluster_name,
-                           feedbacks=qconf_feedbacks)
+                           feedbacks=feedbacks)
 
 
 ############################################################

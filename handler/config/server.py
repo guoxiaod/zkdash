@@ -24,10 +24,9 @@ from lib.utils import normalize_path
 from model.db.zd_znode import ZdZnode
 from model.db.zd_zookeeper import ZdZookeeper
 from model.db.zd_service import ZdService
-from model.db.zd_qconf_feedback import ZdQconfFeedback
+from model.db.zd_feedback import ZdFeedback
 #from service import zookeeper as ZookeeperService
 from service import znode as ZnodeService
-from conf.settings import USE_QCONF
 
 
 ############################################################

@@ -145,38 +145,5 @@ def get_znode_tree(zoo_client, path, nodes, current_id='1', parent_id='0'):
             child_path = os.path.join(path, child)
             get_znode_tree(zoo_client, child_path, nodes, child_id, current_id)
 
-
-def get_znode_tree_from_qconf(cluster_name, path, nodes, current_id='1', parent_id='0'):
-    """get zookeeper nodes from qconf recursively, format as ztree data
-    """
-    from lib.zyqconf import qconf_py
-
-    # 节点名只取最末尾的名称
-    name = path if path == "/" else path.rsplit('/', 1)[-1]
-    nodes.append({
-        "id": current_id,
-        "pId": parent_id,
-        "name": name,
-        "path": path
-    })
-
-    children = []
-    try:
-        children = qconf_py.get_batch_keys(path, cluster_name)
-    except qconf_py.Error as exc:
-        # fix bugs for qconf's get_batch_keys error while path is root path("/")
-        if exc.message == "Error parameter!":
-            zoo_client = ZookeeperService.get_zoo_client(cluster_name)
-            children = zoo_client.get_children(path)
-        else:
-            log.warning('Node does not exists on QConf Agent, path: %s', path)
-
-    for idx, child in enumerate(children):
-        child_path = os.path.join(path, str(child))
-        # 如果父节点ID为1，则它的子节点ID应为101, 102, 103(左填充0到数字, 避免树的广度过宽，id冲突错误, 01, 09...)
-        child_id = "{0}{1:02d}".format(current_id, idx)
-        get_znode_tree_from_qconf(cluster_name, child_path, nodes, child_id, current_id)
-
-
 if __name__ == '__main__':
     pass
