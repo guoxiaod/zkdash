@@ -47,7 +47,7 @@ def get_child_znodes(cluster_name, path):
     return child_znodes
 
 
-def set_znode(cluster_name, path, data, znode_type='0', business=''):
+def set_znode(cluster_name, path, data, znode_type='0', description=''):
     """更新或增加znode节点，包括存储于mysql的元数据和存储于zookeeper上的data
     """
     path = normalize_path(path)
@@ -60,7 +60,7 @@ def set_znode(cluster_name, path, data, znode_type='0', business=''):
     if znode is None:
         znode = ZdZnode(cluster_name=cluster_name, path=path)
     znode.type = znode_type
-    znode.business = business
+    znode.description= description
     znode.save()
 
     try:
@@ -70,12 +70,12 @@ def set_znode(cluster_name, path, data, znode_type='0', business=''):
         log.error('make snapshot error: %s', str(exc))
 
 
-def set_batch_znodes(cluster_name, parent_path, batch_data, business=''):
+def set_batch_znodes(cluster_name, parent_path, batch_data, description=''):
     """set batch znodes from python data
     """
     for key, data in batch_data:
         path = os.path.join(parent_path, key)
-        set_znode(cluster_name, path, data, business=business)
+        set_znode(cluster_name, path, data, description=description)
 
 
 def delete_znodes(cluster_name, path, recursive=False, del_snapshots=True):

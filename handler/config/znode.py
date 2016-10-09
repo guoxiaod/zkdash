@@ -57,6 +57,7 @@ class ZdZnodeShowHandler(CommonBaseHandler):
     """
     args_list = [
         ArgsMap('cluster_name', required=True),
+        ArgsMap('service_name', required=True),
         ArgsMap('path', default="/"),
     ]
 
@@ -85,14 +86,14 @@ class ZdZnodeShowHandler(CommonBaseHandler):
                 path=node["path"],
                 cluster_name=self.cluster_name)
             if zk_node:
-                node['type'] = zk_node.type
-                node['business'] = zk_node.business
+                node['description'] = zk_node.description
                 node['data'] = ZookeeperService.get(
                     self.cluster_name, node["path"])
 
         znodes_data = json.dumps(nodes)
         return self.render('config/znode/displaytree.html',
                            cluster_name=self.cluster_name,
+                           service_name=self.service_name,
                            znodes_data=znodes_data)
 
 
@@ -115,16 +116,15 @@ class ZdZnodeViewHandler(CommonBaseHandler):
             path=self.path,
             cluster_name=self.cluster_name,
             deleted="0")
-        if znode:
-            node_type = znode.type
 
         # 0代表普通节点，1代表文本节点
-        if node_type == "1":
-            download_link = "/config/znode/download?path={0}&cluster_name={1}".format(
-                self.path, self.cluster_name)
-        else:
-            data = ZookeeperService.get(self.cluster_name, self.path)
+        #if node_type == "1":
+        #    download_link = "/config/znode/download?path={0}&cluster_name={1}".format(
+        #        self.path, self.cluster_name)
+        #else:
+        #    data = ZookeeperService.get(self.cluster_name, self.path)
 
+        data = ZookeeperService.get(self.cluster_name, self.path)
         return self.render('config/znode/view.html',
                            data=data,
                            download_link=download_link)
@@ -171,26 +171,27 @@ class ZdZnodeEditHandler(CommonBaseHandler):
             path=normalized_path,
             cluster_name=self.cluster_name,
             deleted='0')
-        business = ""
+        description= ""
         if znode:
-            node_type = znode.type
-            business = znode.business
+            #node_type = znode.type
+            description = znode.description
 
         # "0"代表普通节点, "1"代表文本节点
-        if node_type == "1":
-            # 文件节点提供下载路径
-            download_link = "/config/znode/download?path={0}&cluster_name={1}".format(
-                self.path, self.cluster_name)
+        #if node_type == "1":
+        #    # 文件节点提供下载路径
+        #    download_link = "/config/znode/download?path={0}&cluster_name={1}".format(
+        #        self.path, self.cluster_name)
 
-        else:
-            data = ZookeeperService.get(self.cluster_name, self.path)
+        #else:
+        #    data = ZookeeperService.get(self.cluster_name, self.path)
 
+        data = ZookeeperService.get(self.cluster_name, self.path)
         return self.render('config/znode/edit.html',
                            action='/config/znode/save',
                            cluster_name=self.cluster_name,
                            path=normalized_path,
                            data=data,
-                           business=business,
+                           description=description,
                            download_link=download_link)
 
 
@@ -200,7 +201,8 @@ class ZdZnodeEditTreeHandler(CommonBaseHandler):
     """batch edit, 批量修改
     """
     args_list = [
-        ArgsMap('path', required=True),
+        #ArgsMap('path', required=True),
+        ArgsMap('path', required=False),
         ArgsMap('cluster_name', required=True),
     ]
 
@@ -208,13 +210,16 @@ class ZdZnodeEditTreeHandler(CommonBaseHandler):
     def response(self):
         '''batch edit
         '''
-        child_znodes = ZnodeService.get_child_znodes(
-            self.cluster_name, self.path)
+        #child_znodes = ZnodeService.get_child_znodes(
+        #    self.cluster_name, self.path)
+        #return self.render('config/znode/batchedit.html',
+        #                   action='/config/znode/batchsave',
+        #                   cluster_name=self.cluster_name,
+        #                   parent_path=self.path,
+        #                   child_znodes=child_znodes)
         return self.render('config/znode/batchedit.html',
                            action='/config/znode/batchsave',
-                           cluster_name=self.cluster_name,
-                           parent_path=self.path,
-                           child_znodes=child_znodes)
+                           cluster_name=self.cluster_name)
 
 
 @route(r'/config/znode/syncstatus')
@@ -284,7 +289,7 @@ class ZdZnodeMetadataHandler(CommonBaseHandler):
         zk_node = ZdZnode.one(path=self.path, cluster_name=self.cluster_name)
         if zk_node:
             metainfo['type'] = zk_node.type
-            metainfo['business'] = zk_node.business
+            metainfo['description'] = zk_node.description
         return json.dumps(metainfo)
 
 
@@ -299,7 +304,7 @@ class ZdZnodeSaveHandler(CommonBaseHandler):
         ArgsMap('node_name', default=''),
         ArgsMap('znode_type', default='0'),
         ArgsMap('data', default=''),
-        ArgsMap('business', default=''),
+        ArgsMap('description', default=''),
     ]
 
     @authenticated
@@ -334,7 +339,7 @@ class ZdZnodeSaveHandler(CommonBaseHandler):
                                path=zk_path,
                                data=zk_data,
                                znode_type=self.znode_type,
-                               business=self.business)
+                               description=self.description)
 
         return self.ajax_ok(close_current=True)
 
@@ -345,9 +350,9 @@ class ZdZnodeBatchSaveHandler(CommonBaseHandler):
     """
     args_list = [
         ArgsMap('cluster_name', required=True),
-        ArgsMap('parent_path', required='/'),
-        ArgsMap('business', default=''),
-        ArgsMap('deleted', default=''),
+        #ArgsMap('parent_path', required='/'),
+        #ArgsMap('description', default=''),
+        #ArgsMap('deleted', default=''),
     ]
 
     @authenticated
@@ -356,25 +361,28 @@ class ZdZnodeBatchSaveHandler(CommonBaseHandler):
         '''
         keys = self.get_arguments("key")
         values = self.get_arguments("value")
+        descriptions = self.get_arguments("description")
 
-        batch_data = []
-        for node_name, node_value in zip(keys, values):
-            # 过滤掉所有key为空字符串的项
-            if node_name == '':
-                continue
-            # 检验node_name中是否包含`/`特殊字符
-            if not ZnodeService.is_node_name_ok(node_name):
-                return self.ajax_popup(code=300, msg="节点名不允许包含特殊字符'/'！")
-            batch_data.append((node_name, node_value))
+        #batch_data = []
+        #for node_name, node_value in zip(keys, values):
+        #    # 过滤掉所有key为空字符串的项
+        #    if node_name == '':
+        #        continue
+        #    # 检验node_name中是否包含`/`特殊字符
+        #    if not ZnodeService.is_node_name_ok(node_name):
+        #        return self.ajax_popup(code=300, msg="节点名不允许包含特殊字符'/'！")
+        #    batch_data.append((node_name, node_value))
 
-        # 更新字典，需要删除旧字典与新字典的差集项
-        ZnodeService.delete_znodes_diff_with_keys(
-            self.cluster_name, self.parent_path, keys)
-        # 更新在zookeeper和mysql上存储的配置信息, 同时进行快照备份
-        ZnodeService.set_batch_znodes(cluster_name=self.cluster_name,
-                                      parent_path=self.parent_path,
-                                      batch_data=batch_data,
-                                      business=self.business)
+        ## 更新字典，需要删除旧字典与新字典的差集项
+        #ZnodeService.delete_znodes_diff_with_keys(
+        #    self.cluster_name, self.parent_path, keys)
+        ## 更新在zookeeper和mysql上存储的配置信息, 同时进行快照备份
+        #ZnodeService.set_batch_znodes(cluster_name=self.cluster_name,
+        #                              parent_path=self.parent_path,
+        #                              batch_data=batch_data,
+        #                              description=self.description)
+        for node_name, node_value, node_description in zip(keys, values, descriptions):
+            ZnodeService.set_znode(self.cluster_name, node_name, node_value, node_description)
 
         return self.ajax_ok(close_current=True)
 

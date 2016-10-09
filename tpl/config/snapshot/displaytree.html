@@ -41,9 +41,12 @@
             <label>普通操作</label>
             <div class="input-group">
               <button type="button" class="btn btn-green" id="view_snapshot">查看快照</button>
+              <!--
               <button type="button" class="btn btn-green" id="add_snapshot">生成快照</button>
+              -->
             </div>
           </li>
+          <!--
           <li class="list-group-item">
             <label>批量操作</label>
             <div class="input-group">
@@ -51,18 +54,22 @@
               <button type="button" class="btn btn-blue" onclick="rollback_snapshots(this, '1')">批量回滚</button>
             </div>
           </li>
+	  -->
           <li class="list-group-item">
             <label>快照树维护</label>
             <div class="input-group">
               <button type="button" class="btn btn-orange" onclick="delete_snapshot_node(this, '0')">删除节点</button>
+              <button type="button" class="btn btn-orange" onclick="delete_snapshot_node(this, '1')">删除节点树</button>
             </div>
           </li>
+          <!--
           <li class="list-group-item">
             <label>地狱门</label>
             <div class="input-group">
               <button type="button" class="btn btn-red" onclick="delete_snapshot_node(this, '1')">删除节点树</button>
             </div>
           </li>
+          -->
         </ul>
     </div>
   </div>

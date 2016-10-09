@@ -24,14 +24,6 @@
           <li class="list-group-item">
             <div class="input-group">
               <span class="input-group-btn">
-                <button class="btn btn-default" type="button">服务名称</button>
-              </span>
-              <input type="text" class="form-control" id="zk_node_service" value="{{service_name}}" size="40" readonly>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="input-group">
-              <span class="input-group-btn">
                 <button class="btn btn-default" type="button">节点路径</button>
               </span>
               <input type="text" class="form-control" id="zk_node_path" size="40" readonly>
@@ -58,7 +50,7 @@
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button">描述</button>
               </span>
-              <input type="text" class="form-control" id="zk_node_description" size="40" readonly>
+              <input type="text" class="form-control" id="zk_node_business" size="40" readonly>
             </div>
           </li>
           <li class="list-group-item">
@@ -80,10 +72,8 @@
             <label>快照操作</label>
             <div class="input-group">
               <button type="button" class="btn btn-green" id="view_znode_snapshot">查看快照</button>
-              <!--
               <button type="button" class="btn btn-green" id="add_znode_snapshot">生成快照</button>
               <button type="button" class="btn btn-blue" id="add_snapshots">批量生成快照</button>
-              -->
             </div>
           </li>
           <li class="list-group-item">
@@ -91,6 +81,12 @@
             <div class="input-group">
               <button type="button" class="btn btn-orange" id="view_sync_status">同步状况</button>
               <!--<button type="button" class="btn btn-orange" id="export_znode">导出</button>-->
+            </div>
+          </li>
+          <li class="list-group-item">
+            <label>地狱门</label>
+            <div class="input-group">
+              <button type="button" class="btn btn-red" onclick="deleteZNode(this, '1')">批量删除</button>
             </div>
           </li>
         </ul>
@@ -115,10 +111,10 @@ function zkNodeClick(event, treeId, treeNode){
     } else {
       $('#zk_node_data').val('')
     }
-    if (treeNode.description) {
-      $('#zk_node_description').val(treeNode.description)
+    if (treeNode.business) {
+      $('#zk_node_business').val(treeNode.business)
     } else {
-      $('#zk_node_description').val('')
+      $('#zk_node_business').val('')
     }
 };
 

@@ -29,6 +29,7 @@ class ZdSnapshot(ZKDASH_DB.Model):
     data = TextField(null=True)
     create_time = DateTimeField(null=True)
     commit = CharField(max_length=64, null=True)
+    #operate_type = CharField(max_length=16, null=True)
     status = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])
     deleted = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])
 

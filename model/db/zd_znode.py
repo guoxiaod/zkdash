@@ -24,8 +24,8 @@ class ZdZnode(ZKDASH_DB.Model):
     id = IntegerField(primary_key=True, constraints=[SQL("AUTO_INCREMENT")])
     cluster_name = CharField(max_length=64, null=True)
     path = CharField(max_length=512, null=True)
-    type = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])  # 节点属于普通节点还是文件节点，默认普通节点
-    business = CharField(max_length=64, null=True)
+    #type = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])  # 节点属于普通节点还是文件节点，默认普通节点
+    description = CharField(max_length=64, null=True)
     deleted = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])
 
     class Meta(object):

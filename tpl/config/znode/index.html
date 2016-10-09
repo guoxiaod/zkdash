@@ -28,8 +28,9 @@ $("#search_config_btn").on("click", function(event){
     console.log("aaaaaa");
     console.log(service);
     console.log("aaaaaa");
-    var cluster, path;
+    var cluster, path, service;
     cluster = $("#config_searcher select[name='cluster_name']").val();
+    service = $("#config_searcher select[name='service_name']").val();
     path = "/" + service;
     //path = $("#config_searcher input[name='path']").val() || "/";
     $(this).navtab({
@@ -38,7 +39,7 @@ $("#search_config_btn").on("click", function(event){
         fresh: true,
         title: "配置信息",
         loadingmask: true,
-        data: {cluster_name: cluster, path: path, _xsrf:$.cookie("_xsrf")},
+        data: {cluster_name: cluster, service_name: service, path: path, _xsrf:$.cookie("_xsrf")},
     });
 });
 

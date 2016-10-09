@@ -120,14 +120,14 @@ class ZdServiceSaveHandler(CommonBaseHandler):
         # 当一个节点的父节点存在时才会保存快照
         ZnodeService.set_znode(cluster_name=self.cluster_name,
                                path='/',
-                               data='/',
+                               data='',
                                znode_type='0',
-                               business='')
+                               description='')
         ZnodeService.set_znode(cluster_name=self.cluster_name,
                                path='/' + self.service_name,
-                               data=self.service_name,
+                               data='',
                                znode_type='0',
-                               business='')
+                               description='')
         return self.ajax_ok(forward="/config/service/index")
 
 #@route(r'/config/service/search')
