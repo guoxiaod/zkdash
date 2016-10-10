@@ -17,6 +17,7 @@ class ZdUser(ZKDASH_DB.Model):
     id = IntegerField(primary_key=True, constraints=[SQL("AUTO_INCREMENT")])
     username = CharField(max_length=64, null=True)
     password = CharField(max_length=64, null=True)
+    permission = CharField(max_length=512, null=True)
     deleted = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])
 
     class Meta(object):

@@ -1,0 +1,28 @@
+<div class="bjui-headBar">
+ <ul>
+
+    <div class="btn-group pull-left" role="group">
+      <button type="button" class="btn-blue" data-url="/config/user/edit?info_ids={{ '{#bjui-selected}' }}" data-id="_config_user_edit" data-toggle="navtab" data-icon="edit">修改</button>
+      <button type="button" class="btn-blue" data-url="/config/user/add?" data-id="_config_user_add" data-toggle="navtab" data-icon="plus">新增</button>
+      <button type="button" class="btn-blue" data-url="/config/user/delete?info_ids={{ '{#bjui-selected}' }}" data-confirm-msg="确定要删除选中项吗？" data-id="" data-toggle="doajax" data-icon="remove">删除</button>
+    </div>
+
+ </ul>
+</div>
+<table class="table table-bordered table-hover table-striped table-top" data-toggle="tablefixed" data-layout-h="0">
+ <thead>
+  <tr>
+    <th data-order-field="username" align="left">用户名</th>
+    <th data-order-field="permission" align="left">权限</th>
+  </tr>
+ </thead>
+ <tbody>
+   {% for record in records %}
+   <tr data-id="{{ record.id }}">
+      <td>{% if record.username %} {{ record.username }} {% end %} </td>
+      <td>{% if record.permission %} {{ record.permission }} {% end %} </td>
+   </tr>
+   {% end %}
+ </tbody>
+</table>
+{% module Paginate(total, current_page, page_size) %}
