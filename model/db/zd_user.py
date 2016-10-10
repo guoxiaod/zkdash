@@ -9,19 +9,18 @@ from peewee import SQL
 from model.db.base import ZKDASH_DB, EnumField
 
 
-class ZdZookeeper(ZKDASH_DB.Model):
+class ZdUser(ZKDASH_DB.Model):
 
-    """ZdZookeeper Model
+    """ZdZnode Model
     """
 
     id = IntegerField(primary_key=True, constraints=[SQL("AUTO_INCREMENT")])
-    cluster_name = CharField(max_length=32)
-    hosts = CharField(max_length=128)
-    business = CharField(max_length=255)
+    username = CharField(max_length=64, null=True)
+    password = CharField(max_length=64, null=True)
     deleted = EnumField(enum_value="'0', '1'", constraints=[SQL("DEFAULT '0'")])
 
     class Meta(object):
 
         """表配置信息
         """
-        db_table = "zd_zookeeper"
+        db_table = "zd_user"

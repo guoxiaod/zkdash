@@ -19,24 +19,8 @@ class IndexHandler(CommonBaseHandler):
     '''配置管理系统页面入口
     '''
 
-    #def response(self):
-    #    return self.render('index.html')
-
     def response(self):
-        #return self.render('index.html')
-        return self.render('login.html')
-
-@route(r'/login', '登录验证')
-class LoginMainHandler(CommonBaseHandler):
-
-    '''首页
-    '''
-
-    def response(self):
-        username = self.get_argument('username')
-        password = self.get_argument('passwordhash')
-        self.set_secure_cookie('username', username)
-        self.render('index.html')
+        return self.render('index.html')
 
 
 @route(r'/auth/index/main', '首页')

@@ -1,14 +1,7 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 # pylint: disable=invalid-name
-"""
-Copyright (c) 2014,掌阅科技
-All rights reserved.
 
-摘    要: zd_service.py
-创 建 者: baipeng
-创建日期: 2016-09-12
-"""
 from peewee import DateTimeField
 from peewee import CharField
 from peewee import TextField
