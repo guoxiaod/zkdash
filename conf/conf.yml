@@ -3,16 +3,20 @@ DATABASE:
  db: 'zkdash'
  host: '127.0.0.1'
  port: 3306
- user: 'root'
- passwd: ''
+ user: 'zkdash'
+ passwd: 'zkdash@iws'
 
 # 是否通过QConf获取zookeeper数据（使用该项需要在本地先运行QConf客户端agent）
 USE_QCONF: False
 #USE_QCONF: True
 
+AUTH:
+  salt: '43af737f44addd3a2276b77da23181ff'
+  cookie_secret: '3b8e4c5eb0a51f81febfe1cd12f1a3d9'
+
 # log conf
 LOG_ITEMS:
-  - file: /data/logs/zkdash/zkdash.log
+  - file: /var/log/zkdash/zkdash.log
     log_levels:
       - DEBUG
       - INFO
@@ -25,7 +29,7 @@ LOG_ITEMS:
     backup_count: 10
     backup_suffix: '%Y%m%d'
     level: 'DEBUG'
-  - file: /data/logs/zkdash/zkdash.error.log
+  - file: /varlog/zkdash/zkdash.error.log
     log_levels:
       - WARNING
       - ERROR

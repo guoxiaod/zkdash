@@ -23,6 +23,7 @@ from conf import log
 from conf.settings import (
     LOG_ITEMS,
     OPTIONS,
+    AUTH,
 )
 
 
@@ -37,7 +38,7 @@ class Application(tornado.web.Application):
             'static_path': os.path.join(os.path.dirname(__file__), "static"),
             'template_path': os.path.join(os.path.dirname(__file__), "tpl"),
             'xsrf_cookies': True,
-            'cookie_secret': 'tokyo',
+            'cookie_secret': AUTH['cookie_secret'],
             'site_title': 'zkdash',
             'ui_modules': uimodule,
             'ui_methods': uimethods,

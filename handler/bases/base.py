@@ -59,7 +59,8 @@ class BaseHandler(RequestHandler):
     def get_current_user(self):
         '''获取当前用户
         '''
-        return "tokyo"
+        user_cookie = self.get_secure_cookie("user")
+        return user_cookie
 
     def prepare(self):
         '''get/post前处理函数
@@ -70,6 +71,9 @@ class BaseHandler(RequestHandler):
         '''获取签名值
         '''
         return escape.xhtml_escape(self.xsrf_token)
+
+    def get_method(self):
+        return self.request.method
 
 
 class RestHandler(BaseHandler):
@@ -124,8 +128,15 @@ class RestHandler(BaseHandler):
             log_format(self, error_info=e)
             msg = "参数错误，请检查参数后再请求! {}".format(e)
             return self.send_obj({'status': 1000, 'msg': msg})
+
         try:
-            res = self.response()
+            clz = self.__class__.__name__
+            if  clz == 'LoginMainHandler' or clz == 'LogoutMainHandler':
+                res = self.response()
+            elif self.current_user == None:
+                return self.render('login.html', message = '')
+            else:
+                res = self.response()
         except Exception:
             import traceback
             e = traceback.format_exc()

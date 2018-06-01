@@ -11,6 +11,8 @@ All rights reserved.
 """
 from handler.bases import CommonBaseHandler
 from lib import route
+from lib.utils.hashutil import HashUtil
+from model.db.zd_user import ZdUser
 
 
 @route(r'/')
@@ -23,8 +25,19 @@ class IndexHandler(CommonBaseHandler):
     #    return self.render('index.html')
 
     def response(self):
-        #return self.render('index.html')
-        return self.render('login.html')
+        if self.current_user :
+            return self.render('index.html', current_user = self.current_user)
+
+        return self.render('login.html', message = '')
+
+@route(r'/logout', '退出登录')
+class LogoutMainHandler(CommonBaseHandler):
+    def response(self):
+        try:
+            self.set_cookie("user", '', expires = -1)
+        except Exception:
+            pass
+        return self.render('login.html', message = '')
 
 @route(r'/login', '登录验证')
 class LoginMainHandler(CommonBaseHandler):
@@ -33,10 +46,26 @@ class LoginMainHandler(CommonBaseHandler):
     '''
 
     def response(self):
-        username = self.get_argument('username')
-        password = self.get_argument('passwordhash')
-        self.set_secure_cookie('username', username)
-        self.render('index.html')
+        try:
+            method = self.get_method()
+            if method == 'GET' and self.current_user:
+                return self.redirect('/')
+            elif method == "POST":
+                username = self.get_argument('username')
+                password = self.get_argument('passwordhash')
+
+                if username and password:
+                    password = HashUtil().sha1(password)
+                    records = ZdUser.select().where((ZdUser.username == username) & (ZdUser.password == password))
+
+                    if records.count() > 0:
+                        self.set_secure_cookie('user', username)
+                        return self.render('index.html', current_user = username)
+                raise ValueError(u'用户名或者密码错误')
+        except Exception as error:
+            return self.render('login.html', message = error.args[0])
+
+        return self.render('login.html', message = '')
 
 
 @route(r'/auth/index/main', '首页')

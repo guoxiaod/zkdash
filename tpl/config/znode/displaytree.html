@@ -1,5 +1,9 @@
+<style>
+span.input-group-btn button{width:80px;text-align:left;}
+.mr-2{margin-right:15px;}
+</style>
 <div class="row" style="padding: 0 8px; margin-top: 8px;">
-  <div class="col-md-6">
+  <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">节点展示</div>
       <div class="panel-body" style="height:470px; overflow:auto">
@@ -8,7 +12,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-8">
     <div class="panel panel-default">
       <div class="panel-heading">节点详情</div>
       <div class="panel-body" style="height:470px; overflow:auto">
@@ -18,7 +22,7 @@
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button">集群名称</button>
               </span>
-              <input type="text" class="form-control" id="zk_node_cluster" value="{{cluster_name}}" size="40" readonly>
+              <input type="text" class="form-control" id="zk_node_cluster" value="{{cluster_name}}" size="48" readonly>
             </div>
           </li>
           <li class="list-group-item">
@@ -26,7 +30,7 @@
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button">服务名称</button>
               </span>
-              <input type="text" class="form-control" id="zk_node_service" value="{{service_name}}" size="40" readonly>
+              <input type="text" class="form-control" id="zk_node_service" value="{{service_name}}" size="48" readonly>
             </div>
           </li>
           <li class="list-group-item">
@@ -34,7 +38,7 @@
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button">节点路径</button>
               </span>
-              <input type="text" class="form-control" id="zk_node_path" size="40" readonly>
+              <input type="text" class="form-control" id="zk_node_path" size="48" readonly>
             </div>
           </li>
           <li class="list-group-item">
@@ -42,7 +46,7 @@
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button">节点名称</button>
               </span>
-              <input type="text" class="form-control" id="zk_node_name" size="40" readonly>
+              <input type="text" class="form-control" id="zk_node_name" size="48" readonly>
             </div>
           </li>
           <li class="list-group-item">
@@ -50,7 +54,7 @@
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button">节点值</button>
               </span>
-              <input type="text" class="form-control" id="zk_node_data" size="40" readonly>
+              <textarea class="form-control" id="zk_node_data" readonly cols="48" rows="4"></textarea>
             </div>
           </li>
           <li class="list-group-item">
@@ -58,16 +62,16 @@
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button">描述</button>
               </span>
-              <input type="text" class="form-control" id="zk_node_description" size="40" readonly>
+              <input type="text" class="form-control" id="zk_node_description" size="48" readonly>
             </div>
           </li>
           <li class="list-group-item">
             <label>CRUD操作</label>
             <div class="input-group">
-              <button type="button" class="btn btn-green" id="view_znode">查看</button>
-              <button type="button" class="btn btn-green" id="edit_znode">修改</button>
-              <button type="button" class="btn btn-green" id="add_znode">新增</button>
-              <button type="button" class="btn btn-green" onclick="deleteZNode(this, '0')">删除</button>
+              <button type="button" class="btn btn-green mr-2" id="view_znode">查看</button>
+              <button type="button" class="btn btn-green mr-2" id="edit_znode">修改</button>
+              <button type="button" class="btn btn-green mr-2" id="add_znode">新增</button>
+              <button type="button" class="btn btn-green mr-2" onclick="deleteZNode(this, '0')">删除</button>
             </div>
           </li>
           <li class="list-group-item">

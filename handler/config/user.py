@@ -11,6 +11,7 @@ from peewee import OperationalError
 from handler.bases import CommonBaseHandler
 from handler.bases import ArgsMap
 from lib import route
+from lib.utils.hashutil import HashUtil
 from lib.excel import ExcelWorkBook
 from model.db.zd_zookeeper import ZdZookeeper
 from model.db.zd_user import ZdUser
@@ -154,7 +155,7 @@ class ZdUserSaveHandler(CommonBaseHandler):
         if self.username:
             user.username = self.username
         if self.password:
-            user.password= self.password
+            user.password = HashUtil().sha1(self.password)
 
         service_ids = self.get_arguments("service_id")
         permission = ''

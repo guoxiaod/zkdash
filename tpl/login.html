@@ -109,13 +109,11 @@ function choose_bg() {
     <div class="login_box">
         <div class="login_logo">
         </div>
-        <!--
-        <c:if test="${!empty message}">
+        {% if message %}
             <div class="login_msg">
-                  <font color="red">${message }</font>
+              <font color="red">{{message}}</font>
             </div>
-        </c:if>
-        -->
+        {% end %}
         <div class="login_form">
             <input type="hidden" value="${randomKey }" id="j_randomKey" />
             <form action="login" id="login_form" method="post">
@@ -135,7 +133,7 @@ function choose_bg() {
             </form>
         </div>
     </div>
-    <div class="bottom">Copyright &copy; 2016 - 2017 <a href="#">美图</a></div>
+    <div class="bottom">Copyright &copy; 2016 - 2017 <a href="#"> - </a></div>
 </div>
 </body>
 </html>

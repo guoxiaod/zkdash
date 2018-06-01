@@ -17,8 +17,8 @@
 
    <div class="form-group">
    {% for record in result %}
-       <label class="col-md-4 control-label">{{ record.cluster_name }}</label>
-       <div class="checkbox">
+       <label class="col-md-4 control-label">集群 ({{ record.cluster_name }}):</label>
+       <div class="checkbox col-md-8">
        {% for service in result[record] %}
        <input type="checkbox" name="service_id" id="j_form_checkbox1" value=" {{ service.id }} " data-toggle="icheck" data-label="{{ service.service_name }}">
        {% end %}

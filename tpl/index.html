@@ -32,10 +32,9 @@
 <script src="{{static_url('BJUI/other/jquery.iframe-transport.js')}}"></script>
 <![endif]-->
 <!-- BJUI.all 分模块压缩版 -->
-<!--
 <script src="{{static_url('BJUI/js/bjui-all.js')}}"></script>
--->
 <!-- 以下是B-JUI的分模块未压缩版，建议开发调试阶段使用下面的版本 -->
+<!--
 <script src="{{static_url('BJUI/js/bjui-core.js')}}"></script>
 <script src="{{static_url('BJUI/js/bjui-regional.zh-CN.js')}}"></script>
 <script src="{{static_url('BJUI/js/bjui-frag.js')}}"></script>
@@ -62,6 +61,7 @@
 <script src="{{static_url('BJUI/js/bjui-theme.js')}}"></script>
 <script src="{{static_url('BJUI/js/bjui-initui.js')}}"></script>
 <script src="{{static_url('BJUI/js/bjui-plugins.js')}}"></script>
+-->
 <!-- plugins -->
 <!-- swfupload for uploadify && kindeditor -->
 <script src="{{static_url('BJUI/plugins/swfupload/swfupload.js')}}"></script>
@@ -186,6 +186,7 @@ function MainMenuClick(event, treeId, treeNode) {
     <![endif]-->
     <div id="bjui-window">
     <header id="bjui-header">
+        <div class='pull-right' style='margin-top:15px;margin-right:2em;z-index:99999'>欢迎，{{ current_user }} |  <a href='/logout'>退出</a></div>
         <div id="bjui-hnav">
             <button type="button" class="btn-default bjui-hnav-more-left" title="导航菜单左移"><i class="fa fa-angle-double-left"></i></button>
             <div id="bjui-hnav-navbar-box">

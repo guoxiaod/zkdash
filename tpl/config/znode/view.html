@@ -12,14 +12,12 @@
    -->
 
    <div class="form-group">
-    <label class="col-md-4 control-label">节点值:</label>
-    <div class="col-md-8">
+    <label class="col-md-2 control-label">节点值:</label>
+    <div class="col-md-10">
       {% if download_link %}
         <a type="button" class="btn btn-default" href="{{ download_link }}">点击下载节点文件</a>
       {% else %}
-        <textarea class="form-control" type="text" rows="3" cols="25" readonly>
-          {{ data }}
-        </textarea>
+        <textarea class="form-control" type="text" rows="5" cols="36" readonly>{{ data }}</textarea>
       {% end %}
     </div>
    </div>
